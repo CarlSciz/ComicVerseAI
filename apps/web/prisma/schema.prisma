@@ -1,0 +1,163 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ComicFormat {
+  SINGLE_ISSUE
+  GRAPHIC_NOVEL
+  TRADE_PAPERBACK
+  OMNIBUS
+  DIGITAL
+}
+
+enum CollectionStatus {
+  OWNED
+  WISHLIST
+  READING
+  READ
+  LOANED
+  SOLD
+}
+
+enum CreatorRole {
+  WRITER
+  ARTIST
+  PENCILLER
+  INKER
+  COLORIST
+  LETTERER
+  COVER_ARTIST
+  EDITOR
+}
+
+enum EmbeddingSourceType {
+  COMIC
+  SERIES
+  CREATOR
+  USER_NOTE
+}
+
+model User {
+  id          String      @id @default(cuid())
+  externalId  String?     @unique
+  email       String?     @unique
+  displayName String?
+  comics      UserComic[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Publisher {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  logoKey   String?
+  series    Series[]
+  comics    Comic[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Creator {
+  id        String         @id @default(cuid())
+  name      String
+  slug      String         @unique
+  comics    ComicCreator[]
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+}
+
+model Series {
+  id          String    @id @default(cuid())
+  title       String
+  slug        String    @unique
+  publisherId String
+  startYear   Int?
+  endYear     Int?
+  publisher   Publisher @relation(fields: [publisherId], references: [id])
+  comics      Comic[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([publisherId])
+}
+
+model Comic {
+  id             String              @id @default(cuid())
+  seriesId       String?
+  publisherId    String
+  title          String
+  issueNumber    String?
+  volumeLabel    String?
+  format         ComicFormat
+  releaseYear    Int?
+  coverImageUrl  String?
+  primaryColor   String?
+  description    String?
+  isbn           String?
+  upc            String?
+  series         Series?             @relation(fields: [seriesId], references: [id])
+  publisher      Publisher           @relation(fields: [publisherId], references: [id])
+  creators       ComicCreator[]
+  userComics     UserComic[]
+  embeddings     CollectionEmbedding[]
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+
+  @@index([publisherId])
+  @@index([seriesId])
+  @@index([format])
+  @@index([releaseYear])
+}
+
+model ComicCreator {
+  comicId   String
+  creatorId String
+  role      CreatorRole
+  comic     Comic       @relation(fields: [comicId], references: [id], onDelete: Cascade)
+  creator   Creator     @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+
+  @@id([comicId, creatorId, role])
+  @@index([creatorId])
+}
+
+model UserComic {
+  id          String           @id @default(cuid())
+  userId      String
+  comicId     String
+  status      CollectionStatus @default(OWNED)
+  condition   String?
+  storage     String?
+  notes       String?
+  rating      Int?
+  acquiredAt  DateTime?
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comic       Comic            @relation(fields: [comicId], references: [id], onDelete: Cascade)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@unique([userId, comicId])
+  @@index([userId, status])
+  @@index([comicId])
+}
+
+model CollectionEmbedding {
+  id         String              @id @default(cuid())
+  comicId    String?
+  sourceType EmbeddingSourceType
+  sourceId   String
+  content    String
+  model      String
+  embedding  Unsupported("vector(1536)")?
+  comic      Comic?              @relation(fields: [comicId], references: [id], onDelete: Cascade)
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
+
+  @@index([comicId])
+  @@index([sourceType, sourceId])
+}

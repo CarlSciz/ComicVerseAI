@@ -50,15 +50,15 @@
 .navItem,
 .navItemActive {
   align-items: center;
+  background: transparent;
+  border: 0;
   border-radius: 8px;
+  color: #c8ced8;
   display: flex;
   gap: 10px;
   min-height: 42px;
   padding: 0 12px;
-}
-
-.navItem {
-  color: #c8ced8;
+  text-align: left;
 }
 
 .navItem:hover,
@@ -113,7 +113,7 @@
 }
 
 .topbar h1 {
-  font-size: clamp(2rem, 4vw, 3.8rem);
+  font-size: clamp(2rem, 3.8rem, 3.8rem);
   line-height: 1;
   margin: 0;
   max-width: 760px;
@@ -184,6 +184,16 @@
   gap: 8px;
   min-height: 132px;
   padding: 18px;
+  position: relative;
+}
+
+.metric::before {
+  background: var(--accent);
+  border-radius: 8px 8px 0 0;
+  content: "";
+  height: 4px;
+  inset: 0 0 auto;
+  position: absolute;
 }
 
 .metric span,
@@ -212,7 +222,9 @@
 }
 
 .panel,
-.panelWide {
+.panelWide,
+.collectionView,
+.placeholder {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -231,12 +243,16 @@
   margin-bottom: 16px;
 }
 
-.panelHeader h2 {
+.panelHeader h2,
+.collectionToolbar h2,
+.placeholder h2 {
   font-size: 1.15rem;
   margin: 0;
 }
 
-.recommendations {
+.recommendations,
+.timeline,
+.graphStats {
   display: grid;
   gap: 12px;
 }
@@ -272,15 +288,11 @@
 
 .recommendation p,
 .timelineItem p,
-.graphStats span {
+.graphStats span,
+.placeholder p {
   color: var(--muted);
   line-height: 1.5;
   margin: 0;
-}
-
-.timeline {
-  display: grid;
-  gap: 12px;
 }
 
 .timelineItem {
@@ -330,8 +342,7 @@
 
 .cover {
   aspect-ratio: 2 / 3;
-  background:
-    linear-gradient(180deg, color-mix(in srgb, var(--cover) 82%, white), var(--cover));
+  background: linear-gradient(180deg, color-mix(in srgb, var(--cover) 82%, white), var(--cover));
   border: 1px solid color-mix(in srgb, var(--cover) 70%, black);
   border-radius: 6px;
   color: #ffffff;
@@ -350,11 +361,6 @@
 .cover strong {
   font-size: 1.4rem;
   line-height: 1;
-}
-
-.graphStats {
-  display: grid;
-  gap: 12px;
 }
 
 .graphStats article {
@@ -380,6 +386,318 @@
   margin-top: 3px;
 }
 
+.collectionToolbar {
+  align-items: flex-start;
+  display: flex;
+  gap: 18px;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.filterTabs {
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px;
+}
+
+.filterTab,
+.filterTabActive {
+  align-items: center;
+  border: 0;
+  border-radius: 6px;
+  display: inline-flex;
+  font-size: 0.88rem;
+  font-weight: 800;
+  gap: 6px;
+  min-height: 34px;
+  padding: 0 10px;
+}
+
+.filterTab {
+  background: transparent;
+  color: var(--muted);
+}
+
+.filterTabActive {
+  background: var(--surface);
+  box-shadow: 0 1px 2px rgb(21 23 29 / 10%);
+  color: var(--ink);
+}
+
+.collectionSummary {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 18px;
+}
+
+.collectionSummary article {
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 5px;
+  padding: 14px;
+}
+
+.collectionSummary span {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.collectionSummary strong {
+  font-size: 1.7rem;
+  line-height: 1;
+}
+
+.collectionLayout {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: 220px minmax(0, 1fr);
+}
+
+.collectionGroups {
+  align-self: start;
+  display: grid;
+  gap: 8px;
+}
+
+.groupButton {
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  display: flex;
+  justify-content: space-between;
+  min-height: 42px;
+  padding: 0 12px;
+}
+
+.groupButton:hover {
+  border-color: var(--line-strong);
+}
+
+.groupButton span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.groupButton strong {
+  color: var(--red-dark);
+  font-size: 0.86rem;
+  margin-left: 12px;
+}
+
+.collectionGrid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(3, minmax(180px, 1fr));
+}
+
+.collectionCard {
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+}
+
+.publisherRow {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: 28px;
+}
+
+.publisherLogo {
+  align-items: center;
+  border-radius: 4px;
+  display: inline-flex;
+  font-size: 0.74rem;
+  font-weight: 950;
+  justify-content: center;
+  letter-spacing: 0;
+  line-height: 1;
+  min-height: 24px;
+  min-width: 58px;
+  padding: 4px 8px;
+}
+
+.publisherLogo[data-company="Marvel"] {
+  background: #e62429;
+  color: #ffffff;
+}
+
+.publisherLogo[data-company="DC"] {
+  background: #ffffff;
+  border: 2px solid #0476f2;
+  color: #0476f2;
+  font-size: 0.92rem;
+  min-width: 42px;
+}
+
+.publisherLogo[data-company="Image"] {
+  background: #111827;
+  color: #ffffff;
+  font-style: italic;
+  text-transform: uppercase;
+}
+
+.publisherLogo[data-company="Dark Horse"] {
+  background: #5a2b22;
+  color: #ffffff;
+  min-width: 86px;
+}
+
+.comicCover {
+  align-items: stretch;
+  aspect-ratio: 2 / 3;
+  background:
+    linear-gradient(145deg, rgb(255 255 255 / 18%) 0 22%, transparent 22%),
+    radial-gradient(circle at 72% 28%, rgb(255 255 255 / 28%) 0 12%, transparent 13%),
+    linear-gradient(180deg, color-mix(in srgb, var(--book-color) 78%, white), var(--book-color));
+  border: 1px solid color-mix(in srgb, var(--book-color) 70%, black);
+  border-radius: 6px;
+  box-shadow: 0 10px 24px rgb(21 23 29 / 16%);
+  color: #ffffff;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  font-weight: 900;
+  min-height: 244px;
+  overflow: hidden;
+  padding: 12px;
+  position: relative;
+}
+
+.comicCover::before {
+  background:
+    linear-gradient(90deg, rgb(0 0 0 / 22%), transparent 16%),
+    repeating-linear-gradient(135deg, rgb(255 255 255 / 14%) 0 2px, transparent 2px 9px);
+  content: "";
+  inset: 0;
+  position: absolute;
+}
+
+.comicCover::after {
+  background: rgb(255 255 255 / 88%);
+  border-radius: 999px;
+  content: "";
+  height: 70px;
+  position: absolute;
+  right: -18px;
+  top: 44%;
+  width: 70px;
+}
+
+.coverIssue,
+.comicCover strong,
+.comicCover small {
+  position: relative;
+  z-index: 1;
+}
+
+.coverIssue {
+  background: rgb(21 23 29 / 78%);
+  border-radius: 999px;
+  font-size: 0.78rem;
+  justify-self: start;
+  padding: 5px 8px;
+}
+
+.comicCover strong {
+  align-self: end;
+  font-size: clamp(1.45rem, 2.5vw, 2rem);
+  line-height: 0.98;
+  max-width: 9ch;
+  text-shadow: 0 2px 10px rgb(0 0 0 / 32%);
+}
+
+.comicCover small {
+  align-self: end;
+  font-size: 0.76rem;
+  font-weight: 900;
+  opacity: 0.86;
+}
+
+.collectionInfo {
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.cardHeader {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.cardHeader span {
+  background: #f8ecee;
+  border-radius: 999px;
+  color: var(--red-dark);
+  font-size: 0.75rem;
+  font-weight: 900;
+  padding: 4px 8px;
+}
+
+.cardHeader small,
+.collectionCard p,
+.collectionCard dt {
+  color: var(--muted);
+}
+
+.collectionCard h3 {
+  font-size: 1rem;
+  margin: 0 0 5px;
+}
+
+.collectionCard h3 span {
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.collectionCard p {
+  margin: 0 0 14px;
+}
+
+.collectionCard dl {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0;
+}
+
+.collectionCard dt {
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.collectionCard dd {
+  margin: 2px 0 0;
+}
+
+.placeholder {
+  align-items: flex-start;
+  display: grid;
+  gap: 10px;
+}
+
+.placeholder svg {
+  color: var(--red);
+}
+
 @media (max-width: 1080px) {
   .shell {
     grid-template-columns: 1fr;
@@ -397,11 +715,17 @@
     grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 
+  .navItem,
+  .navItemActive {
+    justify-content: center;
+  }
+
   .syncPanel {
     display: none;
   }
 
-  .metrics {
+  .metrics,
+  .collectionGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -409,11 +733,14 @@
 @media (max-width: 860px) {
   .topbar,
   .workspace,
-  .graphGrid {
+  .graphGrid,
+  .collectionToolbar,
+  .collectionLayout {
     grid-template-columns: 1fr;
   }
 
-  .topbar {
+  .topbar,
+  .collectionToolbar {
     display: grid;
   }
 
@@ -430,8 +757,15 @@
 
   .nav,
   .metrics,
-  .coverStack {
+  .coverStack,
+  .collectionSummary,
+  .collectionGrid {
     grid-template-columns: 1fr;
+  }
+
+  .navItem,
+  .navItemActive {
+    justify-content: flex-start;
   }
 
   .secondaryButton,
@@ -444,5 +778,8 @@
     aspect-ratio: auto;
     min-height: 82px;
   }
-}
 
+  .comicCover {
+    min-height: 220px;
+  }
+}
